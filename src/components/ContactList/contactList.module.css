@@ -1,0 +1,28 @@
+.contactsList {
+    font-size: 16px;
+    list-style-type: disc;
+    padding: 0;
+    min-width: 400px;
+}
+
+.contactListItem {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 10px;
+}
+
+.btn {
+    min-width: 100px;
+    min-height: 30px;
+    margin-left: 20px;
+    background-color: red;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+}
+
+.btn:hover, .btn:focus {
+    background-color: rgb(241, 160, 149);
+    color: rgb(36, 34, 34);
+}

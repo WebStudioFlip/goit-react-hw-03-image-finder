@@ -1,0 +1,49 @@
+h1 {
+    margin: 0;
+    padding: 0;
+}
+
+.form {    
+    min-width: 400px;
+    border: solid;
+    padding: 20px;
+    font-size: 16px;
+}
+
+.formGroup {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 20px;
+   
+    
+}
+.btn {
+    width: calc(100% - 20px);
+min-width: 200px;
+min-height: 40px;
+padding: 5px 10px;
+cursor: pointer;
+background-color: rgb(75, 75, 241);
+border-radius: 5px;
+color: white;
+}
+
+.btn:hover, .btn:focus {
+    background-color: rgb(173, 173, 238);
+    color: rgb(36, 34, 34);
+}
+
+
+.formGroupInput {
+    width: calc(100% - 40px);
+    min-height: 40px;
+    min-width: 200px;
+    padding: 5px 10px;
+}
+
+.formGroupLabel {
+    
+    margin-bottom: 10px;
+}
