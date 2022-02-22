@@ -1,0 +1,33 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1200;
+}
+
+.content {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    min-width: 300px;    
+    max-width: calc(100vw - 80px);
+  max-height: calc(100vh - 80px);
+    position: relative;
+}
+
+.close {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    cursor: pointer;
+    color: red;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
