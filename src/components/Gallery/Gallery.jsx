@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { Component } from 'react';
 import { searchGallery } from '../../shared/services/gallery';
 import ImageGallery from '../ImageGallery';
 import Button from '../Button';
@@ -8,105 +8,113 @@ import { PER_PAGE } from '../../shared/variables/variables';
 import Modal from '../Modal';
 import style from './gallery.module.css'
 
-const Gallery = () => {
-  const [data, setData] = useState({
-    gallery: [],
+class Gallery extends Component {
+state = {
+  data : {gallery: [],
     totalPages: 1,
     loading: false,
-    error: null,
-  });
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
-  const [modal, setModal] = useState({
+    error: null,} ,
+  search:"",
+  page:1,
+  modal: {
     open: false,
     content: null,
-  });
-
-  useEffect(() => {
-    const fetchGallery = async () => {
-      try {
-        const { hits, totalHits } = await searchGallery(page, search);
-
-        setData(prevState => {
-          if (page===1) { 
-            return {
-              gallery: [...hits],
-              totalPages: Math.max(Math.ceil(totalHits / PER_PAGE), 1),
-              loading: false,
-              error: null,
-            };
-          } 
-          else {
-            return {
-              gallery: [...prevState.gallery, ...hits],
-              totalPages: Math.max(Math.ceil(totalHits / PER_PAGE), 1),
-              loading: false,
-              error: null,
-            };
-          }
-        });
-      } catch (error) {
-        setData({
-          ...data,
-          loading: false,
-          error: error.message,
-        });
-      }
-    };
-
-    if (search) {
-      fetchGallery();
-      setData({
-        ...data,
-        loading: true,
-      });
     }
-  }, [search, page]);
+}
 
-  const changeSearch = ({ search }) => {setSearch(search)
-    setPage(1)};
+componentDidUpdate(prevProps, prevState) {
+  const {search, page} =this.state
+  if (prevState.search !== search || prevState.page !== page) {
+    if (search) {
+      this.fetchGallery();
+      this.setState(prepState => {
+        const {data} = prepState
+        return{
+        data:{ ...data,
+          loading: true,}     
+      }});
+    }
+  }  
+}
 
-  const loadMore = () => setPage(prevState => prevState + 1);
+fetchGallery = async () => {
+  const {page, search} = this.state
+  try {
+    const { hits, totalHits } = await searchGallery(page, search);    
+    this.setState(prevState => {
+let {page} = prevState;
+      if (page===1) { 
+        return {data:{
+          gallery: [...hits],
+          totalPages: Math.max(Math.ceil(totalHits / PER_PAGE), 1),
+          loading: false,
+          error: null,
+        }};
+      } 
+      else {
+        return {data:{
+          gallery: [...prevState.data.gallery, ...hits],
+          totalPages: Math.max(Math.ceil(totalHits / PER_PAGE), 1),
+          loading: false,
+          error: null,
+        }};
+      }
+    });
+  } catch (error) {
+    this.setState(prevState => {
+      return {data:{
+        ...prevState.data,
+        loading: false,
+      error: error.message,
+      }}
+    })    
+  }
+};  
 
-  const openModal = content => {
-    setModal({
+  changeSearch = ({ search }) => {this.setState(prevState=>{return{search, page:1}})};
+
+  loadMore = () => this.setState(prevState => {return {page: prevState.page + 1}});
+
+  openModal = content => {
+    this.setState({modal:{
       open: true,
       content,
-    });
+    }});
   };
 
-  const closeModal = () => {
-    setModal({
+  closeModal = () => {
+    this.setState({modal:{
       open: false,
       content: null,
-    });
+    }});
   };
-
-  const { error, gallery, loading, totalPages } = data;
-
+render () {  
+  const { error, gallery, loading, totalPages } = this.state.data;
+const {modal, search, page} =this.state
   return (
     <>
       <div id="modal-root"></div>
-      <Searchbar onSubmit={changeSearch} />
+      <Searchbar onSubmit={this.changeSearch} />
       {error && <p>Ошибка поиска</p>}
       {!gallery.length && search && !loading && !error && (
         <p>Ничего не найдено</p>
       )}
       {loading && <Loader />}
-      <ImageGallery openModal={openModal} gallery={gallery} />
+      <ImageGallery openModal={this.openModal} gallery={gallery} />
 
       {modal.open && (
-        <Modal handleClose={closeModal}>
+        <Modal handleClose={this.closeModal}>
           <div className={style.modal}>
             <img className={style.image} src={modal.content.largeImageURL} alt={modal.content.tags} />
           </div>
         </Modal>
       )}
       {Boolean(gallery.length) && totalPages > page && (
-        <Button loadMore={loadMore} />
+        <Button loadMore={this.loadMore} />
       )}
     </>
   );
+}
 };
 
 export default Gallery;
