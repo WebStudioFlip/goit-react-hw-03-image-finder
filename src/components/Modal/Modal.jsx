@@ -3,7 +3,7 @@ import {createPortal} from "react-dom";
 import PropTypes from 'prop-types';
 import style from './modal.module.css'
 
-
+const modalRoot = document.getElementById("modal-root")
 
 class Modal extends Component {
 
@@ -24,9 +24,7 @@ class Modal extends Component {
         document.removeEventListener("keydown", this.close)
     }
 
-    render() {        
-        const modalRoot = document.getElementById("modal-root")
-console.log(modalRoot)
+    render() {   
         return createPortal((
             <div onClick={this.close} className={style.overlay}>
                 <div className={style.content}>
